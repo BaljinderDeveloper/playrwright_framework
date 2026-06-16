@@ -1,10 +1,9 @@
-
-
 def test_get_objects(playwright):
     request = playwright.request.new_context(
         extra_http_headers={
         "Acccept": "application/json"
         # "Authorization":"Access Bearer token"
+        # "Authorization": f"Bearer {token}"
         }
     )
     response = request.get("https://api.restful-api.dev/objects/2")

@@ -1,0 +1,158 @@
+from playwright.sync_api import Page, expect
+
+def test_web_elements(page: Page):
+
+    # Navigate
+    page.goto("https://example.com")
+
+    # Click button
+    page.locator("#submit-btn").click()
+
+    # Fill textbox
+    page.locator("#username").fill("john")
+
+    # Clear textbox
+    page.locator("#username").clear()
+
+    # Type slowly
+    page.locator("#username").press_sequentially("john")
+
+    # Password field
+    page.locator("#password").fill("secret123")
+
+    # Checkbox
+    page.locator("#terms").check()
+    page.locator("#terms").uncheck()
+
+    # Radio button
+    page.locator("input[value='male']").check()
+
+    # Select dropdown
+    page.locator("#country").select_option(label="India")
+
+    # Multi-select dropdown
+    page.locator("#skills").select_option(
+        ["python", "java"]
+    )
+
+    # Upload file
+    page.locator("#file-upload").set_input_files(
+        "test_data/sample.pdf"
+    )
+
+    # Hover
+    page.locator("#menu").hover()
+
+    # Double click
+    page.locator("#edit").dblclick()
+
+    # Right click
+    page.locator("#context-menu").click(button="right")
+
+    # Drag and drop
+    page.locator("#source").drag_to(
+        page.locator("#target")
+    )
+
+    # Press keyboard key
+    page.locator("#search").press("Enter")
+
+    # Scroll into view
+    page.locator("#footer").scroll_into_view_if_needed()
+
+    # Get text
+    text = page.locator("#message").text_content()
+    print(text)
+
+    # Get attribute
+    href = page.locator("#home-link").get_attribute("href")
+    print(href)
+
+    # Handle alert
+    page.on("dialog", lambda dialog: dialog.accept())
+
+    # Open new tab
+    with page.expect_popup() as popup_info:
+        page.locator("#open-tab").click()
+
+    new_page = popup_info.value
+
+    # Screenshot
+    page.screenshot(path="screenshot.png")
+
+    # Wait for element
+    page.locator("#success").wait_for()
+
+    # Assertions
+    expect(page.locator("#success")).to_be_visible()
+    expect(page.locator("#username")).to_have_value("john")
+
+--------------------Waiting Strategies---------------
+
+# Wait for element
+page.locator("#result").wait_for()
+
+# Wait for page load
+page.wait_for_load_state("networkidle")
+
+# Hard wait (not recommended)
+page.wait_for_timeout(3000)
+
+--------------------Common_Locators--------------------
+
+# By ID
+page.locator("#username")
+
+# By CSS
+page.locator(".login-btn")
+
+# By XPath
+page.locator("//button[text()='Login']")
+
+# By Text
+page.get_by_text("Login")
+
+# By Role
+page.get_by_role("button", name="Login")
+
+# By Placeholder
+page.get_by_placeholder("Enter username")
+
+# By Label
+page.get_by_label("Username")
+
+# By Test ID
+page.get_by_test_id("login-btn")
+
+-------------------------------Useful Assertions
+
+expect(locator).to_be_visible()
+expect(locator).to_be_hidden()
+expect(locator).to_be_enabled()
+expect(locator).to_be_disabled()
+expect(locator).to_have_text("Success")
+expect(locator).to_contain_text("Success")
+expect(locator).to_have_value("India")
+expect(page).to_have_url("https://example.com/dashboard")
+expect(page).to_have_title("Dashboard")
+
+--------------------------alerts,windows,
+def test_alert(page):
+    page.goto("https://example.com")
+    page.on("dialog", lambda dialog: dialog.accept())
+    page.click("#alert-btn")
+
+def test_popup(page):
+    page.goto("https://example.com")
+    with page.expect_popup() as popup_info:
+        page.click("#open-new-tab")
+    new_page = popup_info.value
+    new_page.wait_for_load_state()
+    print(new_page.title())
+
+def test_frame(page):
+    page.goto("https://example.com")
+    frame = page.frame_locator("#my-frame")
+    frame.locator("#username").fill("admin")
+    frame.locator("#password").fill("1234")
+    frame.locator("#login").click()

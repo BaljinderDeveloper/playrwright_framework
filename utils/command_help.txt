@@ -1,0 +1,7 @@
+#running a testcase:
+pytest tests/<script name>
+
+#parallel execution:
+pytest -n auto - use all available cpu cores.
+pytest -4 auto - to utilze 4 work processes at a time.
+

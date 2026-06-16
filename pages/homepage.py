@@ -10,6 +10,8 @@ class Homepage:
         self.password_input = page.get_by_role("textbox", name="Password:")
         self.login_button = page.get_by_role("button", name="Log in")
         self.logout_link = page.get_by_role("link", name="Log out")
+        self.computer_dropdown = page.locator("(//a[contains(text(),'Computers')])[1]")
+        
         
     def enter_username(self, username:str):
         self.username_input.fill(username)
@@ -22,6 +24,9 @@ class Homepage:
         
     def verify_register_link_visible(self):
         expect(self.register_link).to_be_visible()
+        
+    def click_computer_dropdown(self):
+        self.computer_dropdown.click()
         
     def login(self, username:str, password:str):
         self.login_page.click()

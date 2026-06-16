@@ -1,0 +1,5 @@
+.env
+
+testdata/
+
+test_execution.log
